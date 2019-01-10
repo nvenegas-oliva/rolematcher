@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from difflib import get_close_matches
 
@@ -44,3 +45,26 @@ for role in to_clean:
 
 rules = pd.DataFrame(rules)
 rules.to_csv("rules.csv", index=False)
+
+
+# Apply rules to Roles (potentials)
+potentials = pd.read_csv('vtiger_potentialscf.csv')
+potentials.head()
+
+rules.head()
+
+mapping = rules[['rule-key', 'rule-value']].set_index('rule-key').to_dict()
+mapping = mapping['rule-value']
+len(mapping)
+len(roles)
+
+def clean_data(row):
+    if row is np.nan:
+        return row
+    else:
+        old_value = list(map(str.strip, row.split("|##|")))
+        new_value = " |##| ".join([mapping[_] for _ in old_value])
+        return new_value
+
+potentials['cleaned'] = potentials['po_career'].apply(clean_data)
+potentials.to_csv('cleaned.csv', index=False)
