@@ -71,8 +71,21 @@
 			<string>SELECT DISTINCT po_career
 FROM vtiger_potentialscf;
 
+SELECT potentialid, po_career
+FROM vtiger_potentialscf;
+
 SELECT count(po_career), count(*)
 FROM vtiger_potentialscf;
+
+SELECT count(DISTINCT po_career)
+FROM vtiger_potentialscf;
+
+SELECT count(DISTINCT potentialid)
+FROM vtiger_potentialscf;
+
+SELECT count(po_career), count(*)
+FROM vtiger_potentialscf;
+
 
 SELECT DISTINCT cf_846
 FROM vtiger_contactscf;
@@ -125,6 +138,20 @@ SELECT count(*) FROM vtiger_crmentity;
 	<array/>
 	<key>queryHistory</key>
 	<array>
+		<string>SELECT DISTINCT po_career
+FROM vtiger_potentialscf</string>
+		<string>SELECT count(po_career), count(*)
+FROM vtiger_potentialscf</string>
+		<string>SELECT potentialid, po_career
+FROM vtiger_potentialscf</string>
+		<string>SELECT count(DISTINCT potentialid)
+FROM vtiger_potentialscf</string>
+		<string>SELECT count(DISTINCT po_career)
+FROM vtiger_potentialscf</string>
+		<string>SELECT DISTINCT (cf_847)
+FROM vtiger_contactscf</string>
+		<string>SELECT count(cf_847), count(*)
+FROM vtiger_contactscf</string>
 		<string>SELECT count(*) FROM vtiger_contactdetails</string>
 		<string>SELECT count(*) FROM vtiger_contactscf</string>
 		<string>SELECT count(*) FROM vitger_contactscf</string>
@@ -143,18 +170,6 @@ FROM vtiger_leadscf</string>
 FROM vtiger_leadscf</string>
 		<string>SELECT DISTINCT cf_665
 FROM vtiger_leadscf</string>
-		<string>SELECT count(cf_847), count(*)
-FROM vtiger_contactscf</string>
-		<string>SELECT count(cf_846), count(*)
-FROM vtiger_contactscf</string>
-		<string>SELECT DISTINCT (cf_847)
-FROM vtiger_contactscf</string>
-		<string>SELECT cf_847 
-FROM vtiger_contactscf</string>
-		<string>SELECT * FROM vtiger_contactscf LIMIT 200</string>
-		<string>SELECT * FROM vtiger_contactscf</string>
-		<string>SELECT DISTINCT cf_846
-FROM vtiger_contactscf</string>
 	</array>
 	<key>rdbms_type</key>
 	<string>mysql</string>
