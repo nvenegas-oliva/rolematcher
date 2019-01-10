@@ -1,0 +1,5 @@
+# Datasets
+*.csv
+
+# Workbench temp files
+*.mwb.bak
