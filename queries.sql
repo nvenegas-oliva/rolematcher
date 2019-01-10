@@ -37,3 +37,44 @@ WHERE pcf.po_status = 'Open'
 AND ccf.cf_846 IS NOT NULL
 AND crm.deleted = 0
 ORDER BY  pcf.po_career;
+
+
+SELECT DISTINCT po_career
+FROM vtiger_potentialscf;
+
+
+-- First query
+SELECT p.potentialid
+FROM vtiger_potential p
+INNER JOIN vtiger_potentialscf cf ON cf.potentialid = p.potentialid
+INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.role_id = p.potentialid
+INNER JOIN vtiger_contactscf ON vtiger_contactscf.contactid=vtiger_contactdetails.contactid
+INNER JOIN vtiger_account a ON a.accountid = p.related_to
+INNER JOIN vtiger_accountscf acf ON acf.accountid = p.related_to
+INNER JOIN vtiger_crmentity e ON e.crmid = p.potentialid
+INNER JOIN vtiger_crmentity ae ON ae.crmid = a.accountid
+INNER JOIN vtiger_groups g ON g.groupid = e.smownerid
+LEFT JOIN vtiger_companycontact cc ON cc.companycontactid = p.company_contact_id
+WHERE e.deleted = 0 AND (
+    (cf_855 BETWEEN '?' AND '?') OR (cf_881 BETWEEN '?' AND '?') OR (cf_855<='?' AND cf_881>='?')
+)
+AND `po_career` LIKE "%?%" AND `po_status`= "?";
+
+
+-- Second query
+SELECT *, cc.contact_email, a.website,acf.cf_2021, ae.description from vtiger_potential p
+INNER JOIN vtiger_potentialscf pcf ON p.potentialid = pcf.potentialid
+LEFT JOIN vtiger_contactdetails ON vtiger_contactdetails.role_id = p.potentialid
+LEFT JOIN vtiger_contactscf ON vtiger_contactscf.contactid=vtiger_contactdetails.contactid
+INNER JOIN vtiger_crmentity crm ON crm.crmid = p.potentialid
+INNER JOIN vtiger_account a ON a.accountid = p.related_to
+INNER JOIN vtiger_accountscf acf ON acf.accountid = p.related_to
+INNER JOIN vtiger_crmentity ae ON ae.crmid = a.accountid
+INNER JOIN vtiger_groups g ON g.groupid = crm.smownerid
+LEFT JOIN vtiger_companycontact cc ON cc.companycontactid = p.company_contact_id
+WHERE p.potentialid NOT IN ($LIST_OF_FILLED_ROLES)
+AND pcf.po_career LIKE '%?%'
+AND pcf.po_status = "?"
+AND g.groupname = "?"
+AND crm.deleted = 0
+GROUP BY p.potentialid;
