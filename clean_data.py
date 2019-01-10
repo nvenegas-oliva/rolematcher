@@ -48,6 +48,7 @@ rules.to_csv("rules.csv", index=False)
 
 
 # Apply rules to Roles (potentials)
+rules = pd.read_csv('rules.csv')
 potentials = pd.read_csv('vtiger_potentialscf.csv')
 potentials.head()
 
@@ -67,4 +68,8 @@ def clean_data(row):
         return new_value
 
 potentials['cleaned'] = potentials['po_career'].apply(clean_data)
+potentials.head()
+
+potentials[['potentialid', 'po_career']].to_csv('potentials_raw.csv', index=False)
+potentials[['potentialid', 'cleande']].to_csv('potentials_cleaned.csv', index=False)
 potentials.to_csv('cleaned.csv', index=False)
