@@ -6390,3 +6390,18 @@ UPDATE vtiger_potentialscf SET po_career = 'Business' WHERE potentialid = 242088
 UPDATE vtiger_potentialscf SET po_career = '' WHERE potentialid = 2422363;
 UPDATE vtiger_potentialscf SET po_career = 'Finance & Accounting' WHERE potentialid = 2428350;
 UPDATE vtiger_potentialscf SET po_career = 'Engineering |##| Engineering - Electrical |##| Engineering - Electronic |##| Engineering - Software' WHERE potentialid = 2429210;
+UPDATE vtiger_potentialscf SET po_career = 'IT & Computer Science' WHERE potentialid = 2431689;
+UPDATE vtiger_potentialscf SET po_career = '' WHERE potentialid = 2432619;
+UPDATE vtiger_potentialscf SET po_career = 'Art, Photography & Design |##| Engineering |##| Engineering - Industrial |##| Engineering - Mechanical' WHERE potentialid = 2434652;
+UPDATE vtiger_potentialscf SET po_career = 'Business |##| Entrepreneurship' WHERE potentialid = 2434670;
+UPDATE vtiger_potentialscf SET po_career = 'Art, Photography & Design |##| Engineering |##| Engineering - Industrial |##| Engineering - Mechanical' WHERE potentialid = 2434753;
+UPDATE vtiger_potentialscf SET po_career = 'Art, Photography & Design |##| Television & Film' WHERE potentialid = 2437708;
+UPDATE vtiger_potentialscf SET po_career = 'Engineering - Electrical' WHERE potentialid = 2438167;
+UPDATE vtiger_potentialscf SET po_career = 'Entrepreneurship |##| PR & Marketing' WHERE potentialid = 2449877;
+UPDATE vtiger_potentialscf SET po_career = '' WHERE potentialid = 2451896;
+UPDATE vtiger_potentialscf SET po_career = 'Finance & Accounting |##| Finance & Accounting' WHERE potentialid = 2455432;
+UPDATE vtiger_potentialscf SET po_career = 'NGOs & Non-profits' WHERE potentialid = 2456269;
+UPDATE vtiger_potentialscf SET po_career = 'Business' WHERE potentialid = 2457379;
+UPDATE vtiger_potentialscf SET po_career = '' WHERE potentialid = 2458983;
+UPDATE vtiger_potentialscf SET po_career = 'Business |##| Human Resources |##| Law' WHERE potentialid = 2459087;
+UPDATE vtiger_potentialscf SET po_career = 'Business' WHERE potentialid = 2460025;
