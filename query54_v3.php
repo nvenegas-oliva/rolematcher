@@ -30,7 +30,7 @@ function debugEsLog($var) {
 
 	global $esdebug,$txnid;
 
-	 
+
 
 		$string = $txnid."\t".date("Y-m-d H:i:s")."\t";
 
@@ -40,7 +40,7 @@ function debugEsLog($var) {
 
 		file_put_contents("post/debug2.log",$string,FILE_APPEND);
 
-	
+
 
 }
 
@@ -107,7 +107,7 @@ if(!isset($current_user)) {
 $borupost = new borupost($valid_entities);
 $fields = $borupost->translateRequest($entity,$request);
 //End Initiate the borupost object and translate fields
-$nofields = false; 
+$nofields = false;
 if($entity == "Contacts") {
 	$sql = "select * from vtiger_contactdetails c
 	inner join vtiger_contactscf cf on cf.contactid=c.contactid
@@ -129,25 +129,25 @@ if($entity == "Contacts") {
 	WHERE e.deleted=0 AND ";
 } elseif ($entity == "Potentials") {
 	if (!empty($request['po_destination'])){
-		$fields['groupname'] = $request['po_destination']; 
-		unset($fields['po_destination']); 
-		
+		$fields['groupname'] = $request['po_destination'];
+		unset($fields['po_destination']);
+
 	}
 	if (!empty($request['po_career']) && strpos($request['po_career'] , '+') !== false ){
 		$fields['po_career'] = str_replace('+', '', $request['po_career']) ;
 	}
-	
+
 	if(!empty($request['cf_855']) || !empty($request['cf_881'])) {
 		$condition = array();
 		if( !empty($request['cf_855']) && !empty($request['cf_881']) ) {
 			$condition[] = sprintf(" AND ( (cf_855 BETWEEN '%s' AND '%s') OR (cf_881 BETWEEN '%s' AND '%s') OR (cf_855<='%s' AND cf_881>='%s') ) ", $request['cf_855'], $request['cf_881'], $request['cf_855'], $request['cf_881'], $request['cf_855'], $request['cf_881'] );
 		}
-		 
-		
+
+
 		$sql = "select /* *, cc.contact_email, a.website,acf.cf_2021, ae.description */ p.potentialid from vtiger_potential p
-		inner join vtiger_potentialscf cf on cf.potentialid = p.potentialid
-		INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.role_id = p.potentialid 		
-        	inner join vtiger_contactscf on vtiger_contactscf.contactid=vtiger_contactdetails.contactid 
+		inner join vtiger_potentialscf_testing cf on cf.potentialid = p.potentialid
+		INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.role_id = p.potentialid
+        	inner join vtiger_contactscf on vtiger_contactscf.contactid=vtiger_contactdetails.contactid
 		inner join vtiger_account a on a.accountid = p.related_to
 		inner join vtiger_accountscf acf on acf.accountid = p.related_to
 		inner join vtiger_crmentity e on e.crmid = p.potentialid
@@ -155,12 +155,12 @@ if($entity == "Contacts") {
 		inner join vtiger_groups g on g.groupid = e.smownerid
 		left join vtiger_companycontact cc on cc.companycontactid = p.company_contact_id
 		WHERE e.deleted = 0 ".implode(' ', $condition) ;
-		if (!empty($fields)) $sql .= " AND ";  		
+		if (!empty($fields)) $sql .= " AND ";
 		$nofields = true;
 	}
 	else {
 		$sql = "select *, cc.contact_email, a.website,acf.cf_2021, ae.description from vtiger_potential p
-		inner join vtiger_potentialscf cf on cf.potentialid = p.potentialid
+		inner join vtiger_potentialscf_testing cf on cf.potentialid = p.potentialid
 		inner join vtiger_account a on a.accountid = p.related_to
 		inner join vtiger_accountscf acf on acf.accountid = p.related_to
 		inner join vtiger_crmentity e on e.crmid = p.potentialid
@@ -179,7 +179,7 @@ if(!empty($fields) || $nofields) {
 	$array_role_id = array();
 	if ($entity == "Contacts" && $request['role_id'] > 0) {
 
-		$fetch_all = true; 
+		$fetch_all = true;
 
 		$role_id = $request['role_id'];
 
@@ -187,7 +187,7 @@ if(!empty($fields) || $nofields) {
 
 		// search for role label that matches current role_id
 
-			
+
 
 		// search for all role_id's that match the label
 
@@ -197,11 +197,11 @@ if(!empty($fields) || $nofields) {
 
 				WHERE role_id= %d )", $role_id );
 
-	
+
 
 		$result_role = $adb->query($sql_role );
 
-		
+
 
 		// Build array of role_id's
 
@@ -211,8 +211,8 @@ if(!empty($fields) || $nofields) {
 
 		}
 
-	} 
-	
+	}
+
 	foreach($fields as $k=>$v) {
 		if ($entity === "Potentials") {
 		    if ($k === "po_career") {
@@ -225,32 +225,32 @@ if(!empty($fields) || $nofields) {
 		        $conditions[] = "`$k`=?";
 		    }
 		} else {
-			if ($entity == "Contacts" && $k=='role_id' && !empty($array_role_id)) continue; 
+			if ($entity == "Contacts" && $k=='role_id' && !empty($array_role_id)) continue;
 			else $conditions[] = "`$k`=?";
 		}
 		if ($entity == "Contacts" && $k=='role_id' && !empty($array_role_id)) continue;
 
 		else $values[] = $v;
 	}
-	
+
 	// task_id=38835
 
-	if ($entity == "Contacts" && !empty($array_role_id)){ 
-		// fix problem with AND at the end of query if $conditions is not empty 
+	if ($entity == "Contacts" && !empty($array_role_id)){
+		// fix problem with AND at the end of query if $conditions is not empty
 		if (empty($conditions)) $sql.= " role_id in (".implode(',', $array_role_id).") " ;
 
 		else $sql.= " role_id in (".implode(',', $array_role_id).") AND " ;
 
 	}
-	
-	$sql.=implode(" AND ",$conditions); 
-	 
-	
+
+	$sql.=implode(" AND ",$conditions);
+
+
 	if ($entity !== "Potentials" && !$fetch_all) {
 		$sql.=" LIMIT 1";
 	}
-	
-	//echo $sql; echo "\n\n"; var_dump($values); exit; 
+
+	//echo $sql; echo "\n\n"; var_dump($values); exit;
 	debugEsLog($sql);
 	debugEsLog($values);
 	$result = $adb->pquery($sql,$values);
@@ -266,25 +266,25 @@ if(!empty($fields) || $nofields) {
 		  $occupied_roles_str = substr($occupied_roles_str, 0, -1);
 		}
 		$unoccupied_roles_query = "SELECT *, cc.contact_email, a.website,acf.cf_2021, ae.description from vtiger_potential p
-						inner join vtiger_potentialscf pcf ON p.potentialid = pcf.potentialid 
-						LEFT JOIN vtiger_contactdetails ON vtiger_contactdetails.role_id = p.potentialid 
-						LEFT JOIN vtiger_contactscf ON vtiger_contactscf.contactid=vtiger_contactdetails.contactid 
+						inner join vtiger_potentialscf_testing pcf ON p.potentialid = pcf.potentialid
+						LEFT JOIN vtiger_contactdetails ON vtiger_contactdetails.role_id = p.potentialid
+						LEFT JOIN vtiger_contactscf ON vtiger_contactscf.contactid=vtiger_contactdetails.contactid
 						INNER JOIN vtiger_crmentity crm ON crm.crmid = p.potentialid
 						INNER JOIN vtiger_account a ON a.accountid = p.related_to
 						INNER JOIN vtiger_accountscf acf ON acf.accountid = p.related_to
-						INNER JOIN vtiger_crmentity ae ON ae.crmid = a.accountid 
-						INNER JOIN vtiger_groups g ON g.groupid = crm.smownerid 
-						LEFT JOIN vtiger_companycontact cc ON cc.companycontactid = p.company_contact_id 
-						WHERE 
+						INNER JOIN vtiger_crmentity ae ON ae.crmid = a.accountid
+						INNER JOIN vtiger_groups g ON g.groupid = crm.smownerid
+						LEFT JOIN vtiger_companycontact cc ON cc.companycontactid = p.company_contact_id
+						WHERE
 						p.potentialid NOT IN ($occupied_roles_str)
 						AND pcf.po_career LIKE ? AND pcf.po_status = ?
-						AND g.groupname = ? 
+						AND g.groupname = ?
 						AND crm.deleted = 0
 						GROUP BY p.potentialid
 						";
 		$res = $adb->pquery($unoccupied_roles_query,$values);
 		while ($res && $row = $adb->fetch_row($res)){
-			$json[] = $row; 
+			$json[] = $row;
 		}
 		//echo $unoccupied_roles_query; var_dump($values); exit;
 		echo json_encode($json);
@@ -295,7 +295,7 @@ if(!empty($fields) || $nofields) {
                 }
                 echo json_encode($json);
                 exit();
-	}	
+	}
 	$recordid=false;
 	while($result && $row=$adb->fetch_row($result)) {
 		$recordid = $row["crmid"];
