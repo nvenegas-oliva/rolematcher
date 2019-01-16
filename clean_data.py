@@ -49,7 +49,8 @@ rules.to_csv("rules.csv", index=False)
 
 # Apply rules to Roles (potentials)
 rules = pd.read_csv('rules.csv')
-potentials = pd.read_csv('vtiger_potentialscf.csv')
+# potentials = pd.read_csv('vtiger_potentialscf.csv')
+potentials = pd.read_csv('potentials_raw.csv')
 potentials.head()
 
 rules.head()
@@ -71,5 +72,17 @@ potentials['cleaned'] = potentials['po_career'].apply(clean_data)
 potentials.head()
 
 potentials[['potentialid', 'po_career']].to_csv('potentials_raw.csv', index=False)
-potentials[['potentialid', 'cleande']].to_csv('potentials_cleaned.csv', index=False)
+
 potentials.to_csv('cleaned.csv', index=False)
+
+type(potentials.iloc[1]['po_career'])
+potentials.iloc[1]['po_career'] is np.nan
+
+def create_sql(row):
+    if row['po_career'] is np.nan:
+        return "UPDATE vtiger_potentialscf SET po_career = '' WHERE potentialid = %s;" % row['potentialid']
+    else:
+        return "UPDATE vtiger_potentialscf SET po_career = '%s' WHERE potentialid = %s;" % (row['cleaned'], row['potentialid'])
+
+potentials['sql_statement'] = potentials.apply(create_sql, axis=1)
+potentials[['potentialid', 'cleaned', 'sql_statement']].to_csv('potentials_cleaned_20190116.csv', index=False)
