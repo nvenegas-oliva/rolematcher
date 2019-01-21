@@ -78,3 +78,35 @@ AND pcf.po_status = "?"
 AND g.groupname = "?"
 AND crm.deleted = 0
 GROUP BY p.potentialid;
+
+select /* *, cc.contact_email, a.website,acf.cf_2021, ae.description */ p.potentialid from vtiger_potential p
+inner join vtiger_potentialscf_testing cf on cf.potentialid = p.potentialid
+INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.role_id = p.potentialid
+     	inner join vtiger_contactscf on vtiger_contactscf.contactid=vtiger_contactdetails.contactid
+		inner join vtiger_account a on a.accountid = p.related_to
+		inner join vtiger_accountscf acf on acf.accountid = p.related_to
+		inner join vtiger_crmentity e on e.crmid = p.potentialid
+		inner join vtiger_crmentity ae on ae.crmid = a.accountid
+		inner join vtiger_groups g on g.groupid = e.smownerid
+		left join vtiger_companycontact cc on cc.companycontactid = p.company_contact_id
+		WHERE e.deleted = 0 ;
+
+DESCRIBE vtiger_account;
+SELECT * FROM vtiger_account LIMIT 10;
+
+DESCRIBE vtiger_accountscf;
+SELECT * FROM vtiger_accountscf LIMIT 10;
+g
+SELECT p.potentialid
+FROM vtiger_potential p
+INNER JOIN vtiger_potentialscf cf ON cf.potentialid = p.potentialid
+INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.role_id = p.potentialid
+INNER JOIN vtiger_contactscf ON vtiger_contactscf.contactid=vtiger_contactdetails.contactid
+INNER JOIN vtiger_account a ON a.accountid = p.related_to
+INNER JOIN vtiger_accountscf acf ON acf.accountid = p.related_to
+INNER JOIN vtiger_crmentity e ON e.crmid = p.potentialid
+INNER JOIN vtiger_crmentity ae ON ae.crmid = a.accountid
+INNER JOIN vtiger_groups g ON g.groupid = e.smownerid
+LEFT JOIN vtiger_companycontact cc ON cc.companycontactid = p.company_contact_id
+WHERE e.deleted = 0 AND ( (cf_855 BETWEEN '2018-06-16' AND '2018-07-28') OR (cf_881 BETWEEN '2018-06-16' AND '2018-07-28') OR (cf_855<='2018-06-16' AND cf_881>='2018-07-28') )
+AND `po_career` LIKE "%PR %" AND `po_status`="Open" AND `groupname`="London"
